@@ -18,6 +18,7 @@ const pokeFetchQuery = gql`query pokemons($limit: Int, $offset: Int) {
         url
         name
         image
+        dreamworld
         id
       }
     }
@@ -53,7 +54,7 @@ const stylePokeListHeadSearch = css({
     }
 })
 
-function PokeList(){
+export default function PokeList(){
     const [limit, setLimit] = useState(20);
     const [offset, setOffset] = useState(0);
     const [totalData, setTotalData] = useState([]);
@@ -99,5 +100,3 @@ function PokeList(){
         </React.Fragment>
     )
 }
-
-export default PokeList;

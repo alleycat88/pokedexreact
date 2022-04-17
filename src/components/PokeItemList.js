@@ -1,6 +1,7 @@
 /** @jsxImportSource @emotion/react */
 
 import { css } from '@emotion/react';
+import { Link } from 'react-router-dom';
 import icPokeball from '../assets/pokeball.png';
 
 const stylePokeItem = css({
@@ -11,6 +12,9 @@ const stylePokeItem = css({
     position: 'relative',
     background: '#ffffff',
     boxShadow:  '5px 5px 12px #999999, -5px -5px 12px #ffffff',
+    '&:hover, &:focus':{
+        boxShadow:  'inset 5px 5px 12px #999999, inset -5px -5px 12px #ffffff'
+    }
 })
 
 const stylePokeItemId = css({
@@ -69,12 +73,12 @@ const imageFallback = (target, img, height = null, width = null) => {
 
 function PokeItemList(props){
     return(
-        <div css={stylePokeItem}>
+        <Link css={stylePokeItem} to={`/poke/${props.poke.name}?img=${encodeURI(props.poke.dreamworld)}`}>
             <p css={stylePokeItemId}>#{props.poke.id}</p>
             <p css={stylePokeItemOwned}>3 Owned</p>
             <img css={stylePokeItemImg} src={props.poke.image} onError={(e) => imageFallback(e.target, icPokeball)} />
             <p css={stylePokeItemName}>{props.poke.name}</p>
-        </div>
+        </Link>
     )
 }
 
