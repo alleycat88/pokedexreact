@@ -8,6 +8,8 @@ import {
   InMemoryCache,
   ApolloProvider
 } from "@apollo/client";
+import { MyPokeProvider } from './contexts/ContextMyPoke';
+import { PokeListProvider } from './contexts/ContextPokeList';
 
 const client = new ApolloClient({
   uri: 'https://graphql-pokeapi.graphcdn.app/',
@@ -17,7 +19,11 @@ const client = new ApolloClient({
 ReactDOM.render(
   <React.StrictMode>
     <ApolloProvider client={client}>
-      <App />
+      <PokeListProvider>
+        <MyPokeProvider>
+          <App />
+        </MyPokeProvider>
+      </PokeListProvider>
     </ApolloProvider>
   </React.StrictMode>,
   document.getElementById('root')

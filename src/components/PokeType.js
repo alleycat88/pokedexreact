@@ -10,7 +10,7 @@ const PokeTypeItem = css({
     borderRadius: '180px',
     color: 'white',
     fontWeight: '700',
-    boxShadow: '8px 8px 29px #d6d6d6,-8px -8px 29px #ffffff',
+    boxShadow: '8px 8px 16px #d6d6d6,-8px -8px 16px #ffffff',
 })
 
 const pokeTypeColor = [

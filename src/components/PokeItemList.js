@@ -1,8 +1,10 @@
 /** @jsxImportSource @emotion/react */
 
 import { css } from '@emotion/react';
+import { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import icPokeball from '../assets/pokeball.png';
+import MyPokeContext from '../contexts/ContextMyPoke';
 
 const stylePokeItem = css({
     // border: 'solid 1px black',
@@ -72,10 +74,23 @@ const imageFallback = (target, img, height = null, width = null) => {
 };
 
 function PokeItemList(props){
+    const {myPoke} = useContext(MyPokeContext);
+    const [ownedCount, setOwnedCount] = useState(0);
+    const [ownedCountFetched, setownedCountFetched] = useState(false);
+
+    const getOwnedSpeciesCount = () => {
+        setOwnedCount(myPoke.filter(a => a.name == props.poke.name).length);
+        setownedCountFetched(true);
+    }
+
+    if(!ownedCountFetched) getOwnedSpeciesCount();
+
     return(
         <Link css={stylePokeItem} to={`/poke/${props.poke.name}?img=${encodeURI(props.poke.dreamworld)}`}>
             <p css={stylePokeItemId}>#{props.poke.id}</p>
-            <p css={stylePokeItemOwned}>3 Owned</p>
+            {
+                ownedCount < 1 ? null : <p css={stylePokeItemOwned}>{ownedCount} Owned</p>
+            }
             <img css={stylePokeItemImg} src={props.poke.image} onError={(e) => imageFallback(e.target, icPokeball)} />
             <p css={stylePokeItemName}>{props.poke.name}</p>
         </Link>

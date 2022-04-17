@@ -2,13 +2,14 @@
 
 import { useQuery, gql } from '@apollo/client';
 import { css } from '@emotion/react';
-import React from 'react';
+import React, { useContext } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import icBack from '../assets/back.png';
 import { useNavigate } from 'react-router-dom';
 import PokeType from '../components/PokeType';
 import PokeInfo from '../components/PokeInfo';
 import PokeStat from '../components/PokeStat';
+import MyPokeContext from '../contexts/ContextMyPoke';
 
 const pokedetailFetchQuery = gql`query pokemon($name: String!) {
     pokemon(name: $name) {
@@ -17,6 +18,9 @@ const pokedetailFetchQuery = gql`query pokemon($name: String!) {
         weight
         height
         base_experience
+        sprites{
+            front_default
+        }
         types{
             type{
                 name
@@ -36,6 +40,7 @@ const stylePokeDetailHead = css({
     display: 'flex',
     gap: '20px',
     justifyContent: 'space-between',
+    backgroundColor: 'white',
     h2: {
         margin: 0,
         textTransform: 'capitalize'
@@ -53,6 +58,7 @@ const stylePokeDetailHeadTitle = css({
 const stylePokeDetailBodyWrap = css({
     overflowX: 'hidden',
     width: '100vw',
+    paddingBottom: '100px'
 })
 
 const stylePokeImg = css({
@@ -60,7 +66,7 @@ const stylePokeImg = css({
     borderBottomLeftRadius: '180px',
     borderBottomRightRadius: '180px',
     background: '#ffffff',
-    boxShadow: '10px 10px 30px #d9d9d9, -10px -10px 30px #ffffff',
+    boxShadow: '15px 15px 30px #d9d9d9, -15px -15px 30px #ffffff',
     padding: '150px 0px 50px 0px',
     marginTop: '-120px',
     marginBottom: '30px',
@@ -105,7 +111,21 @@ const stylePokeStats = css({
     }
 })
 
+const stylePokeBtnCatch = css({
+    margin: '0 auto',
+    display: 'block',
+    padding: '10px 27px',
+    borderRadius: '10px',
+    boxShadow: '11px 11px 22px #d9d9d9, -11px -11px 22px #ffffff',
+    background: 'linear-gradient(145deg, #e6e6e6, #ffffff)',
+    border: 'solid .1px #f1f1f1',
+    fontWeight: '700',
+    marginTop: '30px'
+})
+
 export default function PokeDetail(props){
+    const {addMyPoke} = useContext(MyPokeContext);
+
     let { name } = useParams();
     const navigate = useNavigate();
     const querystring = useSearchParams();
@@ -116,7 +136,14 @@ export default function PokeDetail(props){
         }
     })
 
-    if(data) console.log(data)
+    function catchPoke(){
+        var didIGetIt = Math.random() < 0.5;
+        if(didIGetIt) {
+            console.log("You got it!");
+            addMyPoke(data.pokemon, "test nicknamee");
+        }
+        else console.log("nope")
+    }
 
     return(
         <React.Fragment>
@@ -148,10 +175,11 @@ export default function PokeDetail(props){
                     <h2>Base Stats</h2>
                     {
                         data?.pokemon.stats.map(stat => (
-                            <PokeStat key={stat.stat.name} title={stat.stat.name} val={stat.base_stat} max={300}/>
+                            <PokeStat key={stat.stat.name} title={stat.stat.name} val={stat.base_stat} max={100}/>
                         ))
                     }
                 </div>
+                <button css={stylePokeBtnCatch} onClick={catchPoke}>Use Pokeball</button>
             </div>
         </React.Fragment>
     )

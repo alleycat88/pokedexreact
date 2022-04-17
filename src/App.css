@@ -12,3 +12,8 @@ a{
 a:focus{
     outline: none !important;
 }
+
+#root{
+    background-color: #eaeaea;
+    min-height: 100vh;
+}

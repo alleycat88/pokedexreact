@@ -1,11 +1,12 @@
 /** @jsxImportSource @emotion/react */
 
 import { useQuery, gql } from '@apollo/client';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import PokeItemList from '../components/PokeItemList';
 import { css } from '@emotion/react';
 import icSearch from '../assets/search.png';
 import { initializeScrollToBottomListener, removeScollToBottomListener } from '../helpers/ScrollToBottomLoader';
+import PokeListContext from '../contexts/ContextPokeList';
 
 const pokeFetchQuery = gql`query pokemons($limit: Int, $offset: Int) {
     pokemons(limit: $limit, offset: $offset) {
@@ -36,7 +37,6 @@ const stylePokeListBody = css({
 
 const stylePokeListHead = css({
     padding: '10px 25px',
-    // marginBottom: '25px',
     display: 'flex',
     justifyContent: 'space-between',
     h2: {
@@ -55,28 +55,16 @@ const stylePokeListHeadSearch = css({
 })
 
 export default function PokeList(){
-    const [limit, setLimit] = useState(20);
-    const [offset, setOffset] = useState(0);
-    const [totalData, setTotalData] = useState([]);
+    const {pokeList, getNextPage} = useContext(PokeListContext);
+
     const [canFetch, setCanFetch] = useState(true);
-    const { isLoading, isError, data } = useQuery(pokeFetchQuery, {
-        variables: {
-            limit: limit,
-            offset: offset
-        }
-    })
 
-    useEffect(() => {
-        if(data?.pokemons.results) setTotalData([...new Set([...totalData, ...data?.pokemons.results])]);
-    }, [data?.pokemons.results]); 
-
-    // var canFetch = true;
     useEffect(() => {
         initializeScrollToBottomListener('pokeListBody', () => {
             if (canFetch) {
                 setCanFetch(false);
                 setTimeout(() => {
-                    setOffset(offset+limit);
+                    getNextPage();
                     setCanFetch(true);
                 }, 2000);
             }
@@ -92,7 +80,7 @@ export default function PokeList(){
             </div>
             <div css={stylePokeListBody} id='pokeListBody'>
                 {
-                    totalData.map( poke => (
+                    pokeList.map( poke => (
                         <PokeItemList poke={poke} key={poke.id} />
                     ))
                 }
