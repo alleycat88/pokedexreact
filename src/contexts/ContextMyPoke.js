@@ -28,7 +28,7 @@ export function MyPokeProvider({children}) {
 
         poke = JSON.parse(JSON.stringify(poke));
         poke.nickname = nickname;
-        mypokedata.push(poke);
+        mypokedata.unshift(poke);
 
         setMyPoke(mypokedata);
         updatePokeLS(mypokedata);

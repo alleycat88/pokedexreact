@@ -10,6 +10,7 @@ import PokeType from '../components/PokeType';
 import PokeInfo from '../components/PokeInfo';
 import PokeStat from '../components/PokeStat';
 import MyPokeContext from '../contexts/ContextMyPoke';
+import CatchPokemonButton from '../components/CatchPokemonButton';
 
 const pokedetailFetchQuery = gql`query pokemon($name: String!) {
     pokemon(name: $name) {
@@ -51,10 +52,6 @@ const stylePokeDetailHeadBack = css({
     height: '32px'
 })
 
-const stylePokeDetailHeadTitle = css({
-    flexGrow: 1,
-})
-
 const stylePokeDetailBodyWrap = css({
     overflowX: 'hidden',
     width: '100vw',
@@ -90,6 +87,14 @@ const stylePokeName = css({
     fontWeight: '700',
     textAlign: 'center',
     textTransform: 'capitalize',
+    marginBottom: '10px'
+})
+
+const stylePokeOwned = css ({
+    textAlign: 'center',
+    color: 'grey',
+    marginTop: '5px',
+    marginBottom: '30px'
 })
 
 const stylePokeType = css({
@@ -111,20 +116,8 @@ const stylePokeStats = css({
     }
 })
 
-const stylePokeBtnCatch = css({
-    margin: '0 auto',
-    display: 'block',
-    padding: '10px 27px',
-    borderRadius: '10px',
-    boxShadow: '11px 11px 22px #d9d9d9, -11px -11px 22px #ffffff',
-    background: 'linear-gradient(145deg, #e6e6e6, #ffffff)',
-    border: 'solid .1px #f1f1f1',
-    fontWeight: '700',
-    marginTop: '30px'
-})
-
 export default function PokeDetail(props){
-    const {addMyPoke} = useContext(MyPokeContext);
+    const {myPoke} = useContext(MyPokeContext);
 
     let { name } = useParams();
     const navigate = useNavigate();
@@ -136,28 +129,24 @@ export default function PokeDetail(props){
         }
     })
 
-    function catchPoke(){
-        var didIGetIt = Math.random() < 0.5;
-        if(didIGetIt) {
-            console.log("You got it!");
-            addMyPoke(data.pokemon, "test nicknamee");
-        }
-        else console.log("nope")
-    }
+    var howManyOwned = myPoke.filter(a => a.name === name).length;
 
     return(
         <React.Fragment>
             <div css={stylePokeDetailHead}>
-                <img src={icBack} css={stylePokeDetailHeadBack} onClick={() => navigate(-1)}/>
+                <img src={icBack} css={stylePokeDetailHeadBack} onClick={() => navigate(-1)} alt=''/>
                 <h2>{data? `#${data.pokemon.id}` : ''}</h2>
             </div>
             <div css={stylePokeDetailBodyWrap}>
                 <div css={stylePokeImg}>
                     <div>
-                        <img src={decodeURI(querystring[0].get("img"))}/>
+                        <img src={decodeURI(querystring[0].get("img"))} alt={name}/>
                     </div>
                 </div>
                 <p css={stylePokeName}>{name}</p>
+                {
+                    howManyOwned > 0 ? <p css={stylePokeOwned}>{howManyOwned} Owned</p> : null
+                }
                 <div css={stylePokeType}>
                     {
                         data?.pokemon.types.map( type => ( 
@@ -170,7 +159,6 @@ export default function PokeDetail(props){
                     <PokeInfo title='Height' data={data? `${data?.pokemon.height/10} M` : '... M'}/>
                     <PokeInfo title='Base Exp.' data={data? `${data?.pokemon.base_experience} XP` : '... XP'}/>
                 </div>
-                {/* <hr/> */}
                 <div css={stylePokeStats}>
                     <h2>Base Stats</h2>
                     {
@@ -179,7 +167,7 @@ export default function PokeDetail(props){
                         ))
                     }
                 </div>
-                <button css={stylePokeBtnCatch} onClick={catchPoke}>Use Pokeball</button>
+                <CatchPokemonButton pokemon={data?.pokemon}/>
             </div>
         </React.Fragment>
     )
