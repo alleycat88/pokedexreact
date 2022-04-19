@@ -2,7 +2,7 @@
 
 import { useQuery, gql } from '@apollo/client';
 import { css } from '@emotion/react';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import icBack from '../assets/back.png';
 import { useNavigate } from 'react-router-dom';
@@ -24,6 +24,11 @@ const pokedetailFetchQuery = gql`query pokemon($name: String!) {
         }
         types{
             type{
+                name
+            }
+        }
+        moves{
+            move{
                 name
             }
         }
@@ -111,9 +116,31 @@ const stylePokeInfos = css({
 
 const stylePokeStats = css({
     textAlign: 'center',
-    h3:{
-        marginTop: '25px'
-    }
+})
+
+const stylePokeMoves = css({
+    textAlign: 'center'
+})
+
+const stylePokeMove = css({
+    padding: '8px 16px',
+    borderRadius: '180px',
+    backgroundColor: 'black',
+    color: 'white',
+    display: 'inline-block'
+})
+
+const stylePokeMovesWrap = css({
+    height: '100px',
+    overflowX: 'scroll',
+    overflowY: 'hidden',
+    whiteSpace: 'nowrap',
+    padding: '0px 10px',
+    p:{
+        textTransform: 'capitalize',
+        marginRight: '10px',
+        boxShadow: '8px 8px 16px #d6d6d6,-8px -8px 16px #ffffff'
+    },
 })
 
 export default function PokeDetail(props){
@@ -128,6 +155,10 @@ export default function PokeDetail(props){
             name: name
         }
     })
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [])
 
     var howManyOwned = myPoke.filter(a => a.name === name).length;
 
@@ -158,6 +189,16 @@ export default function PokeDetail(props){
                     <PokeInfo title='Weight' data={data? `${data?.pokemon.weight/10} KG` : '... KG'}/>
                     <PokeInfo title='Height' data={data? `${data?.pokemon.height/10} M` : '... M'}/>
                     <PokeInfo title='Base Exp.' data={data? `${data?.pokemon.base_experience} XP` : '... XP'}/>
+                </div>
+                <div css={stylePokeMoves}>
+                    <h2>Moves</h2>
+                    <div css={stylePokeMovesWrap}>
+                        {
+                            data?.pokemon.moves.map(move => (
+                                <p css={stylePokeMove} key={move.move.name}>{move.move.name.replaceAll('-', ' ')}</p>
+                            ))
+                        }
+                    </div>
                 </div>
                 <div css={stylePokeStats}>
                     <h2>Base Stats</h2>

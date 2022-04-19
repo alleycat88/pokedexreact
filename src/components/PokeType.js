@@ -42,6 +42,6 @@ export function getPokeTypeColor(name){
 
 export default function PokeType(props){
     return(
-        <span css={PokeTypeItem} style={{backgroundColor: getPokeTypeColor(props.type.name)}}>{props.type.name}</span>
+        <span css={css`${PokeTypeItem}; background-color: ${getPokeTypeColor(props.type.name)}`}>{props.type.name}</span>
     )
 }

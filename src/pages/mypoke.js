@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 
 import { css } from '@emotion/react';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import PokeMyPokeItemList from '../components/PokeMyPokeItemList';
 import MyPokeContext from '../contexts/ContextMyPoke';
 
@@ -26,6 +26,10 @@ const styleMyPokeBody = css({
 
 export default function MyPoke(){
     const {myPoke} = useContext(MyPokeContext);
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [])
 
     return(
         <React.Fragment>

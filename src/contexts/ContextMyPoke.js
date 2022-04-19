@@ -38,7 +38,9 @@ export function MyPokeProvider({children}) {
     const deleteMyPoke = (nickname) => {
         var mypokedata = readPokeLS();
         
-        setMyPoke(mypokedata.filter(a => a.nickname.toLowerCase() != nickname.toLowerCase()));
+        mypokedata = mypokedata.filter(a => a.nickname.toLowerCase() != nickname.toLowerCase());
+
+        setMyPoke(mypokedata);
         updatePokeLS(mypokedata);
         return mypokedata;
     }

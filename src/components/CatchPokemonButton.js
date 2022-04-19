@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 
 import { css, keyframes } from '@emotion/react';
-import React, { useContext, useRef, useState } from 'react';
+import React, { createRef, useContext, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 import imgPokeball from '../assets/pokeball2.png';
 import MyPokeContext from '../contexts/ContextMyPoke';
@@ -48,6 +48,52 @@ const stylePokeBtnCatch = css({
     fontWeight: '700',
     marginTop: '10px'
 })
+
+const stylePopup = css({
+    textAlign: 'center',
+    paddingBottom: '20px'
+})
+
+const stylePopupName = css({
+    textTransform: 'capitalize',
+    marginBottom: '5px'
+})
+
+const stylePopupInputWrap = css({
+    display: 'flex',
+    justifyContent: 'space-around',
+    alignItems: 'center'
+})
+
+const stylePopupImg = css({
+    width: '150px',
+    borderRadius: '180px',
+    background: 'linear-gradient(145deg, #ffffff, #e6e6e6)',
+    boxShadow:  '15px 15px 30px #d9d9d9, -15px -15px 30px #ffffff',
+    border: 'solid .1px #f1f1f1',
+    padding: '10px'
+})
+
+const stylePopupInputName = css({
+    boxShadow: 'inset 11px 11px 22px #d9d9d9, inset -11px -11px 22px #ffffff',
+    border: 'solid .1px #f1f1f1',
+    padding: '10px',
+    borderRadius: '8px'
+})
+
+const stylePopupErrorMsg = css({
+    color: 'red'
+})
+
+const stylePopupButton = css({
+    padding: '10px 27px',
+    borderRadius: '10px',
+    boxShadow: '5px 5px 10px #d9d9d9, -5px -5px 10px #ffffff',
+    background: '#ffffff',
+    border: 'none',
+    fontWeight: '700',
+})
+
 
 const roll = keyframes`
     0% {
@@ -99,12 +145,15 @@ export default function CatchPokemonButton(props){
     const [animrun, setanimrun] = useState(null);
 
     const [errormsg, seterrormsg] = useState();
+    const [catchBtnTxt, setcatchBtnTxt] = useState('Catch Pokemon!');
 
     const [showPopup, setshowPopup] = useState(false);
 
     const nicknameInput = useRef();
 
     function catchPoke(){
+        setcatchBtnTxt('Catching...')
+
         var didIGetIt = Math.random() < 0.5;
         if(didIGetIt) {
             console.log("You got it!");
@@ -118,6 +167,7 @@ export default function CatchPokemonButton(props){
         // animation
         setTimeout(() => {
             if(didIGetIt) setshowPopup(true);
+            else setcatchBtnTxt('Try Catching Again!')
             setanimrun(null);
         }, 6000);
     }
@@ -140,20 +190,22 @@ export default function CatchPokemonButton(props){
                     <img src={imgPokeball} alt=''/>
                     <span css={animrun? css`animation: ${animrun} 6s ease` : ''} />
                 </div>
-                <button css={stylePokeBtnCatch} onClick={catchPoke} disabled={animrun? true : false}>Catch Pokemon!</button>
+                <button css={stylePokeBtnCatch} onClick={catchPoke} disabled={animrun? true : false}>{catchBtnTxt}</button>
             </div>
             
             {
                 showPopup ?
                 <Popup>
-                    <div style={{textAlign: 'center'}}>
+                    <div css={stylePopup}>
                         <h4>You Caught</h4>
-                        <img src={props.pokemon?.sprites.front_default} />
-                        <h2>{props.pokemon?.name}</h2>
+                        <img css={stylePopupImg} src={props.pokemon?.sprites.front_default} />
+                        <h2 css={stylePopupName}>{props.pokemon?.name}</h2>
                         <p>Go give it a name!</p>
-                        <input ref={nicknameInput}/>
-                        <p>{errormsg}</p>
-                        <button onClick={savePoke}>Save to My Collection</button>
+                        <div css={stylePopupInputWrap}>
+                            <input css={stylePopupInputName} ref={nicknameInput}/>
+                            <button css={stylePopupButton} onClick={savePoke}>Save</button>
+                        </div>
+                        <p css={stylePopupErrorMsg}>{errormsg}</p>
                     </div>
                 </Popup> : null
             }

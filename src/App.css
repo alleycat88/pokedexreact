@@ -16,4 +16,5 @@ a:focus{
 #root{
     background-color: #eaeaea;
     min-height: 100vh;
+    overflow-x: hidden;
 }

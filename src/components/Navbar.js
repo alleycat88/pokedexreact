@@ -4,6 +4,8 @@ import { css } from '@emotion/react';
 import React from 'react';
 import { Outlet } from 'react-router';
 import { Link } from 'react-router-dom';
+import iconPokedex from '../assets/pokedex.png';
+import iconMyPokemon from '../assets/pokemon.png';
 
 const styleNavbar = css({
     position: 'fixed',
@@ -49,11 +51,11 @@ export default function NavBar(){
             <Outlet/>
             <div css={styleNavbar}>
                 <Link to={'/'} css={styleNavbarIcon}>
-                    <img src="http://via.placeholder.com/100x100"/>
+                    <img src={iconPokedex}/>
                     <p>Pokedex</p>
                 </Link>
                 <Link to={'/MyPokemon'} css={styleNavbarIcon}>
-                    <img src="http://via.placeholder.com/100x100"/>
+                    <img src={iconMyPokemon}/>
                     <p>My Pokemon</p>
                 </Link>
             </div>

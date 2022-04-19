@@ -3,7 +3,7 @@
 import { css } from '@emotion/react';
 import { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
-import icPokeball from '../assets/pokeball.png';
+import icPokeball from '../assets/pokeball2.png';
 import MyPokeContext from '../contexts/ContextMyPoke';
 
 const stylePokeItem = css({

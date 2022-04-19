@@ -13,7 +13,7 @@ const styleOverlay = css({
 })
 
 const stylePopup = css({
-    backgroundColor: 'white',
+    backgroundColor: '#eaeaea',
     borderRadius: '12px',
     width: '80%',
     maxWidth: '500px',
